@@ -15,7 +15,7 @@ def Tracking(Sequence, tracker_list, visualize = True):
     if not os.path.exists('results/'):
         os.mkdir("results")
 
-    print 'generate images.txt and region.txt files...'
+    print( 'generate images.txt and region.txt files...')
     with open("images.txt","w") as f:
         while Sequence._frame < len(Sequence._images):
             f.write(Sequence.frame()+'\n')
@@ -24,10 +24,10 @@ def Tracking(Sequence, tracker_list, visualize = True):
     with open("region.txt", "w") as f:
         f.write(open(os.path.join(Sequence.seqdir, 'groundtruth.txt'), 'r').readline())
 
-    print 'start tracking...'
+    print( 'start tracking...')
 
     for str in tracker_list:
-        print 'tracking using: '+str
+        print( 'tracking using: '+str)
         import_module(str)
 
         if not os.path.exists('results/'+str+'/'+Sequence.name):
@@ -36,7 +36,7 @@ def Tracking(Sequence, tracker_list, visualize = True):
     os.remove("images.txt")
     os.remove("region.txt")
 
-    print 'Done!!'
+    print( 'Done!!')
 
 
     if visualize:
@@ -190,11 +190,6 @@ def overlap_plot(Sequence, tracker_list):
     plt.show()
 
 
-
-
-
-
-
 def imshow_grid(images, shape=[3, 10]):
     """Plot images in a grid of a given shape."""
     fig = plt.figure(1)
@@ -203,6 +198,8 @@ def imshow_grid(images, shape=[3, 10]):
     size = shape[0] * shape[1]
     for i in range(size):
         grid[i].axis('off')
-        grid[i].imshow(images[i]/np.max(images[i]),cmap=plt.cm.gray)  # The AxesGrid object work as a list of axes.
+        if np.max(images[i]) != 0:
+            images[i] = images[i]/np.max(images[i])
+        grid[i].imshow(images[i],cmap=plt.cm.gray)  # The AxesGrid object work as a list of axes.
 
     plt.show()

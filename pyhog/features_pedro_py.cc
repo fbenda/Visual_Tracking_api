@@ -264,8 +264,17 @@ static PyMethodDef features_pedro_py_methods[] = {
   {NULL, NULL, 0, NULL} /* sentinel*/
 };
 
-PyMODINIT_FUNC initfeatures_pedro_py() {
-  Py_InitModule("features_pedro_py", features_pedro_py_methods);
-  import_array();
-}
+static struct PyModuleDef cModPyDem =
+{
+    PyModuleDef_HEAD_INIT,
+    "features_pedro_py", /* name of module */
+    "",          /* module documentation, may be NULL */
+    -1,          /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    features_pedro_py_methods
+};
 
+PyMODINIT_FUNC PyInit_features_pedro_py(void)
+{
+    import_array();
+    return PyModule_Create(&cModPyDem);
+}

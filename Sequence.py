@@ -21,7 +21,7 @@ def parse_region(string):
     if len(tokens) == 4:
         return Rectangle(float(tokens[0]), float(tokens[1]), float(tokens[2]), float(tokens[3]))
     elif len(tokens) % 2 == 0 and len(tokens) > 4:
-        return Polygon([Point(float(tokens[i]),float(tokens[i+1])) for i in xrange(0,len(tokens),2)])
+        return Polygon([Point(float(tokens[i]),float(tokens[i+1])) for i in range(0,len(tokens),2)])
     return None
 
 def encode_region(region):

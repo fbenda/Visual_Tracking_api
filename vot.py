@@ -25,11 +25,11 @@ Point = collections.namedtuple('Point', ['x', 'y'])
 Polygon = collections.namedtuple('Polygon', ['points'])
 
 def parse_region(string):
-    tokens = map(float, string.split(','))
+    tokens = list(string.split(','))
     if len(tokens) == 4:
-        return Rectangle(tokens[0], tokens[1], tokens[2], tokens[3])
+        return Rectangle(float(tokens[0]), float(tokens[1]), float(tokens[2]), float(tokens[3]))
     elif len(tokens) % 2 == 0 and len(tokens) > 4:
-        return Polygon([Point(tokens[i],tokens[i+1]) for i in xrange(0,len(tokens),2)])
+        return Polygon([Point(float(tokens[i]), float(tokens[i+1])) for i in range(0, len(tokens),2)])
     return None
 
 def encode_region(region):
@@ -101,9 +101,9 @@ class VOT(object):
             self._image = str(request.image)
             self._trax.status(request.region)
         else:
-            self._files = [x.strip('\n') for x in open('images.txt', 'r').readlines()]
+            self._files = [x.strip('\n') for x in open('../images.txt', 'r').readlines()]
             self._frame = 0
-            self._region = convert_region(parse_region(open('region.txt', 'r').readline()), region_format)
+            self._region = convert_region(parse_region(open('../region.txt', 'r').readline()), region_format)
             self._result = []
         
     def region(self):

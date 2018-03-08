@@ -121,7 +121,8 @@ def dense_gauss_kernel(sigma, xf, x, zf=None, z=None):
 
     return k
 
-def get_scale_subwindow(im,pos,base_target_size, scaleFactors,
+
+def get_scale_subwindow( im, pos, base_target_size, scaleFactors,
                         scale_window, scale_model_sz):
     from pyhog import pyhog
     nScales = len(scaleFactors)

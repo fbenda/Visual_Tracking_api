@@ -10,3 +10,11 @@ tutorials/rect2\.png
 pyhog/features_pedro_py\.o
 
 pyhog/features_pedro_py\.so
+
+\.idea/
+
+\.ipynb_checkpoints/
+
+tutorials/bmx/
+
+tutorials/output\.txt

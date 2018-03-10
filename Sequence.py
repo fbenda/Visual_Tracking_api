@@ -71,9 +71,10 @@ def convert_region(region, to):
 
     return None
 
+
 class Sequence(object):
     """ Base class for Python VOT integration """
-    def __init__(self, path, name, region_format = 'rectangle'):
+    def __init__(self, path, name, region_format='rectangle'):
         self.name = name
         """ Constructor
         

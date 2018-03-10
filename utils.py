@@ -2,13 +2,14 @@ import numpy as np
 from scipy import misc
 from skimage import transform
 
+
 def get_window_size(target_sz, im_sz, padding):
 
     if (target_sz[0] / target_sz[1] > 2):
         # For objects with large height, we restrict the search window with padding.height
         window_sz = np.floor(np.multiply(target_sz, [1 + padding.height, 1 + padding.generic]))
 
-    elif np.prod(target_sz)/np.prod(im_sz) > 0.05:
+    elif np.prod(target_sz) / np.prod(im_sz) > 0.05:
         # For objects with large height and width and accounting for at least 10 percent of the whole image,
         # we only search 2xheight and width
         window_sz = np.floor(target_sz * (1 + padding.large))
@@ -19,9 +20,7 @@ def get_window_size(target_sz, im_sz, padding):
     return window_sz
 
 
-
-
-def get_subwindow(im, pos, sz, scale_factor = None, feature='raw'):
+def get_subwindow(im, pos, sz, scale_factor=None, feature='raw'):
     """
     Obtain sub-window from image, with replication-padding.
     Returns sub-window of image IM centered at POS ([y, x] coordinates),
@@ -39,7 +38,7 @@ def get_subwindow(im, pos, sz, scale_factor = None, feature='raw'):
     sz_ori = sz
 
     if scale_factor != None:
-        sz = np.floor(sz*scale_factor)
+        sz = np.floor(sz * scale_factor)
 
     ys = np.floor(pos[0]) + np.arange(sz[0], dtype=int) - np.floor(sz[0] / 2)
     xs = np.floor(pos[1]) + np.arange(sz[1], dtype=int) - np.floor(sz[1] / 2)
@@ -58,13 +57,13 @@ def get_subwindow(im, pos, sz, scale_factor = None, feature='raw'):
     if scale_factor != None:
         out = misc.imresize(out, sz_ori.astype(int))
 
-
     if feature == 'hog':
         from pyhog import pyhog
         hog_feature = pyhog.features_pedro(out / 255., 1)
         out = np.lib.pad(hog_feature, ((1, 1), (1, 1), (0, 0)), 'edge')
 
     return out
+
 
 def merge_features(features):
     num, h, w = features.shape
@@ -76,8 +75,8 @@ def merge_features(features):
         j = idx % row
         merged[i * h:(i + 1) * h, j * w:(j + 1) * w] = s
 
-
     return merged
+
 
 def dense_gauss_kernel(sigma, xf, x, zf=None, z=None):
     """
@@ -109,12 +108,12 @@ def dense_gauss_kernel(sigma, xf, x, zf=None, z=None):
         xyf_ifft = np.fft.ifft2(np.sum(xyf, axis=2))
     elif len(xyf.shape) == 2:
         xyf_ifft = np.fft.ifft2(xyf)
-            # elif len(xyf.shape) == 4:
-            #     xyf_ifft = np.fft.ifft2(np.sum(xyf, axis=3))
+        # elif len(xyf.shape) == 4:
+        #     xyf_ifft = np.fft.ifft2(np.sum(xyf, axis=3))
 
-    #row_shift, col_shift = np.floor(np.array(xyf_ifft.shape) / 2).astype(int)
-    #xy_complex = np.roll(xyf_ifft, row_shift, axis=0)
-    #xy_complex = np.roll(xy_complex, col_shift, axis=1)
+    # row_shift, col_shift = np.floor(np.array(xyf_ifft.shape) / 2).astype(int)
+    # xy_complex = np.roll(xyf_ifft, row_shift, axis=0)
+    # xy_complex = np.roll(xy_complex, col_shift, axis=1)
     c = np.real(xyf_ifft)
     d = np.real(xx) + np.real(zz) - 2 * c
     k = np.exp(-1. / sigma ** 2 * np.abs(d) / N)
@@ -122,7 +121,7 @@ def dense_gauss_kernel(sigma, xf, x, zf=None, z=None):
     return k
 
 
-def get_scale_subwindow( im, pos, base_target_size, scaleFactors,
+def get_scale_subwindow(im, pos, base_target_size, scaleFactors,
                         scale_window, scale_model_sz):
     from pyhog import pyhog
     nScales = len(scaleFactors)
@@ -130,7 +129,7 @@ def get_scale_subwindow( im, pos, base_target_size, scaleFactors,
     for i in range(nScales):
         patch_sz = np.floor(base_target_size * scaleFactors[i])
         scale_patch = get_subwindow(im, pos, patch_sz)
-        im_patch_resized = transform.resize(scale_patch, scale_model_sz,mode='reflect')
+        im_patch_resized = transform.resize(scale_patch, scale_model_sz, mode='reflect')
         temp_hog = pyhog.features_pedro(im_patch_resized, 4)
         out.append(np.multiply(temp_hog.flatten(), scale_window[i]))
 
